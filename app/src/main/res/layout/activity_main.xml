@@ -32,7 +32,6 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         app:columnCount="4"
         app:rowCount="5">
 
@@ -53,7 +52,7 @@
             android:src="@drawable/ic_backspace_24dp"
             android:id="@+id/img_btn"
             android:scaleType="center"
-
+            android:background="@drawable/button_bg"
             />
         <Button
             android:layout_width="0dp"

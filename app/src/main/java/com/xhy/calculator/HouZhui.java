@@ -154,6 +154,7 @@ public class HouZhui {
             String[] hz = s;
             Stack<String> st = new Stack<String>();
             Double n1, n2;
+            // #表示没有的部分用空表示，0表示用0填
             DecimalFormat decimalFormat = new DecimalFormat("#.########");
             String str;
             for (int i = 0; i < hz.length; i++) {
