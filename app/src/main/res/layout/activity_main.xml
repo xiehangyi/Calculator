@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_input"
-        android:textSize="12sp"
+        android:textSize="24sp"
         android:padding="16dp"
 
         />
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_ouput"
-        android:textSize="12sp"
+        android:textSize="24sp"
         android:padding="16dp"
         />
 
@@ -51,7 +51,7 @@
             app:layout_columnWeight="1"
             app:layout_rowWeight="1"
             android:src="@drawable/ic_backspace_24dp"
-            android:id="@+id/btn"
+            android:id="@+id/img_btn"
             android:scaleType="center"
 
             />

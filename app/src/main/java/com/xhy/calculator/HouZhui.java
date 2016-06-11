@@ -3,8 +3,10 @@ package com.xhy.calculator;
 /**
  * Created by change100 on 2016/5/18.
  */
+
 import android.util.Log;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -19,7 +21,6 @@ public class HouZhui {
     public HouZhui(String expressionStrs) {
 
         String s1 = getS(expressionStrs);
-        Log.v("aa",s1);
 
         s = getHouZhui(s1);
 
@@ -31,16 +32,16 @@ public class HouZhui {
      * @param s
      * @return
      */
-    public String getS(String s){
+    public String getS(String s) {
 
         StringBuilder sb = new StringBuilder();
         char[] c = s.toCharArray();
 
-        for(int i = 0; i < c.length; i++){
+        for (int i = 0; i < c.length; i++) {
 
-            if('+'==c[i] || '-'==c[i] || '*' ==c[i]|| '/'==c[i]){
+            if ('+' == c[i] || '-' == c[i] || '*' == c[i] || '/' == c[i]) {
 
-                sb.append(";"+c[i]+";");
+                sb.append(";" + c[i] + ";");
             } else {
                 sb.append(c[i]);
             }
@@ -57,8 +58,7 @@ public class HouZhui {
      *
      * @return
      */
-    public int getJiSuan(){
-
+    public String getJiSuan() {
 
 
         return jisuan();
@@ -66,6 +66,7 @@ public class HouZhui {
 
     /**
      * 匹配s1，s2的优先级
+     *
      * @param s1
      * @param s2
      * @return
@@ -85,7 +86,8 @@ public class HouZhui {
 
 
     /**
-     *  得到后缀式
+     * 得到后缀式
+     *
      * @param expressionStrs
      * @return
      */
@@ -127,6 +129,7 @@ public class HouZhui {
 
     /**
      * 判断是否为数字，是数字则返回true
+     *
      * @param s
      * @return
      */
@@ -141,48 +144,60 @@ public class HouZhui {
 
     /**
      * 根据后缀式计算结果
+     *
      * @return
      */
-    public int jisuan() {
+    public String jisuan() {
 
-        String[] hz = s;
-        Stack<String> st = new Stack<String>();
-        int n1,n2;
-        String str;
-        for (int i = 0; i < hz.length; i++) {
+        String b;
+        try {
+            String[] hz = s;
+            Stack<String> st = new Stack<String>();
+            Double n1, n2;
+            DecimalFormat decimalFormat = new DecimalFormat("#.########");
+            String str;
+            for (int i = 0; i < hz.length; i++) {
 
-            if (pdShu(hz[i])) {
+                if (pdShu(hz[i])) {
 
-                st.add(hz[i]);
+                    st.add(hz[i]);
 
-            } else {
-                if ("+".equals(hz[i])) {
-                    n1 = Integer.parseInt(st.pop());
-                    n2 = Integer.parseInt(st.pop());
-                    str = String.valueOf(n2 + n1);
-                    st.add(str);
-                } else if("-".equals(hz[i])) {
-                    n1 = Integer.parseInt(st.pop());
-                    n2 = Integer.parseInt(st.pop());
-                    str = String.valueOf(n2 - n1);
-                    st.add(str);
-                } else if("*".equals(hz[i])) {
-                    n1 = Integer.parseInt(st.pop());
-                    n2 = Integer.parseInt(st.pop());
-                    str = String.valueOf(n2 * n1);
-                    st.add(str);
-                } else if("/".equals(hz[i])) {
-                    n1 = Integer.parseInt(st.pop());
-                    n2 = Integer.parseInt(st.pop());
-                    str = String.valueOf(n2 / n1);
-                    st.add(str);
+                } else {
+                    if ("+".equals(hz[i])) {
+                        n1 = Double.parseDouble(st.pop());
+                        n2 = Double.parseDouble(st.pop());
+
+                        str = String.valueOf(n2 + n1);
+                        st.add(str);
+                    } else if ("-".equals(hz[i])) {
+                        n1 = Double.parseDouble(st.pop());
+                        n2 = Double.parseDouble(st.pop());
+                        str = String.valueOf(n2 - n1);
+                        st.add(str);
+                    } else if ("*".equals(hz[i])) {
+                        n1 = Double.parseDouble(st.pop());
+                        n2 = Double.parseDouble(st.pop());
+                        str = String.valueOf(n2 * n1);
+                        st.add(str);
+                    } else if ("/".equals(hz[i])) {
+                        n1 = Double.parseDouble(st.pop());
+                        n2 = Double.parseDouble(st.pop());
+                        str = String.valueOf(n2 / n1);
+                        st.add(str);
+                    }
                 }
             }
+
+            b = decimalFormat.format(Double.parseDouble(st.pop()));
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
 
-        int b = Integer.parseInt(st.pop());
-
         return b;
+
     }
 
 

@@ -6,7 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,9 +30,13 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_sub;
     private Button btn_c;
     private Button btn_equal;
+    private Button btn_dian;
+    private ImageButton img_btn;
+
+    private boolean b = false;
+    private boolean isfinish = false;
 
     private static StringBuilder str_show;
-    //private static StringBuilder str;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
 
         str_show = new StringBuilder();
-       // str = new StringBuilder();
+
         btn_0 = (Button) findViewById(R.id.btn_0);
         btn_1 = (Button) findViewById(R.id.btn_1);
         btn_2 = (Button) findViewById(R.id.btn_2);
@@ -60,8 +66,10 @@ public class MainActivity extends AppCompatActivity {
         btn_sub = (Button) findViewById(R.id.btn_sub);
         btn_c = (Button) findViewById(R.id.btn_c);
         btn_equal = (Button) findViewById(R.id.btn_equal);
+        img_btn = (ImageButton) findViewById(R.id.img_btn);
         tv_output = (TextView) findViewById(R.id.tv_ouput);
         tv_input = (TextView) findViewById(R.id.tv_input);
+        btn_dian = (Button) findViewById(R.id.btn_dian);
 
         btn_0.setOnClickListener(new BtnListener("0"));
         btn_1.setOnClickListener(new BtnListener("1"));
@@ -77,13 +85,37 @@ public class MainActivity extends AppCompatActivity {
         btn_sub.setOnClickListener(new BtnListener("-"));
         btn_mul.setOnClickListener(new BtnListener("*"));
         btn_div.setOnClickListener(new BtnListener("/"));
+        btn_dian.setOnClickListener(new BtnListener("."));
 
         btn_c.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 str_show=new StringBuilder();
-                //str.delete(0,str_show.length()-1);
                 tv_input.setText("");
+
+                if(b){
+                    tv_output.setText("");
+                } else {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            b = true;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(MainActivity.this,"两秒内再按一次清除结果",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            try {
+                                Thread.sleep(2000);
+                                b = false;
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }).start();
+                }
             }
         });
 
@@ -92,15 +124,57 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 HouZhui hz = new HouZhui(str_show.toString());
+                if(hz.getJiSuan() != null) {
+                    tv_output.setText(hz.getJiSuan());
+                } else {
+                    Toast.makeText(MainActivity.this,"您输入的算式可能有误，请检查后再输入",Toast.LENGTH_SHORT).show();
+                }
 
-                tv_output.setText(String.valueOf(hz.getJiSuan()));
+            }
+        });
 
+        img_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!tv_input.getText().equals("")) {
+                    str_show = str_show.deleteCharAt(str_show.length() - 1);
+                    tv_input.setText(str_show);
+                } else {
+                    Toast.makeText(MainActivity.this,"输入框已为空",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if (isfinish) {
+            finish();
+        } else {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this, "再按一次退出", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    isfinish = true;
+                    try {
+                        Thread.sleep(2000);
+                        isfinish = false;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+    }
 
     private class BtnListener implements View.OnClickListener {
 
@@ -118,71 +192,53 @@ public class MainActivity extends AppCompatActivity {
             switch (s){
 
                 case "0":
-                    //str.append("0;");
                     str_show.append("0");
                     break;
                 case "1":
-                    //str.append("1;");
                     str_show.append("1");
                     break;
                 case "2":
-                    //str.append("2;");
                     str_show.append("2");
                     break;
                 case "3":
-                    //str.append("3;");
                     str_show.append("3");
                     break;
                 case "4":
-                    //str.append("4;");
                     str_show.append("4");
                     break;
                 case "5":
-                    //str.append("5;");
                     str_show.append("5");
                     break;
                 case "6":
-                    //str.append("6;");
                     str_show.append("6");
                     break;
                 case "7":
-                    //str.append("7;");
                     str_show.append("7");
                     break;
                 case "8":
-                    //str.append("8;");
                     str_show.append("8");
                     break;
                 case "9":
-                    //str.append("9;");
                     str_show.append("9");
                     break;
                 case "+":
-                    //str.append("+;");
                     str_show.append("+");
                     break;
                 case "-":
-                    //str.append("-;");
                     str_show.append("-");
                     break;
                 case "*":
-                    //str.append("*;");
                     str_show.append("*");
                     break;
                 case "/":
-                    //str.append("/;");
                     str_show.append("/");
                     break;
                 case ".":
-                    //str.append(".");
                     str_show.append(".");
                     break;
 
-
             }
 
-
-            //Log.v("aa",str_show);
             tv_input.setText(str_show);
 
         }
